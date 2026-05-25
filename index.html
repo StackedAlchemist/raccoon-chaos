@@ -5,648 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Joanne's Raccoon Chaos Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Righteous&family=Lilita+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --navy:   #002244;
-      --teal:   #69BE28;
-      --purple: #cc44ff;
-      --pink:   #ff69b4;
-      --white:  #fff9f0;
-      --gray:   rgba(255,249,240,.35);
-      --bg:     #020f1f;
-      --bg2:    #061828;
-      --card:   #071e30;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Nunito', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* HALFTONE BG */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image: radial-gradient(circle, rgba(105,190,40,.07) 1px, transparent 1px);
-      background-size: 26px 26px;
-    }
-
-    body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 90% 50% at 50% 0%,   rgba(204,68,255,.18), transparent 60%),
-        radial-gradient(ellipse 60% 40% at 0% 100%,  rgba(255,105,180,.12), transparent 55%),
-        radial-gradient(ellipse 50% 40% at 100% 50%, rgba(105,190,40,.1),  transparent 55%);
-    }
-
-    /* FLOATING BG COONS */
-    .bg-coon {
-      position: fixed; pointer-events: none; z-index: 0;
-      font-size: 3rem; opacity: .05;
-      animation: drift linear infinite;
-    }
-    @keyframes drift {
-      from { transform: translateY(110vh) rotate(0deg); }
-      to   { transform: translateY(-10vh) rotate(360deg); }
-    }
-
-    /* ═══════════════════ */
-    /* TAPE               */
-    /* ═══════════════════ */
-    .tape {
-      height: 30px;
-      background: repeating-linear-gradient(
-        -45deg,
-        var(--teal) 0, var(--teal) 16px,
-        var(--navy) 16px, var(--navy) 32px
-      );
-      position: relative; overflow: hidden;
-    }
-    .tape::after {
-      content: '🦝 TRASH PANDA TERRITORY 🦝 RACCOON ZONE 🦝 DANGER 🦝 TRASH PANDA TERRITORY 🦝 RACCOON ZONE 🦝';
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive;
-      font-size: .65rem; letter-spacing: .18em; color: var(--white);
-      white-space: nowrap; overflow: hidden;
-      text-shadow: 1px 1px 0 #000;
-    }
-
-    /* ═══════════════════ */
-    /* HEADER             */
-    /* ═══════════════════ */
-    header {
-      position: relative; z-index: 2; overflow: hidden;
-    }
-
-    .header-inner {
-      background: linear-gradient(180deg,
-        #000d1a 0%,
-        rgba(0,34,68,.95) 40%,
-        var(--bg) 100%
-      );
-      padding: 36px 20px 0;
-      display: flex; flex-direction: column;
-      align-items: center; text-align: center;
-    }
-
-    /* Seahawks gradient stripe */
-    .hawks-stripe {
-      width: 100%; height: 6px;
-      background: linear-gradient(90deg,
-        var(--navy), var(--teal), var(--purple), var(--pink), var(--teal), var(--navy)
-      );
-      background-size: 300%;
-      animation: stripe-flow 6s linear infinite;
-      margin-bottom: 28px;
-    }
-    @keyframes stripe-flow { to { background-position: 300%; } }
-
-    /* ═══════════════════════════ */
-    /* RACCOON SVG HERO            */
-    /* ═══════════════════════════ */
-    .hero-wrap {
-      position: relative;
-      width: 220px; height: 290px;
-      margin-bottom: -10px;
-    }
-
-    .coon-svg {
-      position: absolute;
-      bottom: 30px; left: 50%;
-      transform: translateX(-50%);
-      width: 180px;
-      animation: coon-bob 2s ease-in-out infinite;
-      filter: drop-shadow(0 6px 16px rgba(0,0,0,.6));
-      z-index: 3;
-    }
-    @keyframes coon-bob {
-      0%,100% { transform: translateX(-50%) translateY(0); }
-      50%      { transform: translateX(-50%) translateY(-10px); }
-    }
-
-    /* TRASH CAN */
-    .trash-wrap {
-      position: absolute;
-      bottom: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 120px; z-index: 2;
-    }
-
-    .trash-body {
-      width: 100px; height: 90px;
-      margin: 0 auto;
-      background: linear-gradient(135deg, #4a4a5a, #2a2a38, #3a3a48);
-      border-radius: 4px 4px 12px 12px;
-      border: 3px solid #111;
-      box-shadow: inset -8px 0 14px rgba(0,0,0,.4), 5px 5px 0 #111;
-      position: relative;
-    }
-    .trash-body::before {
-      content: '';
-      position: absolute;
-      top: 18px; left: 12px; right: 12px; height: 3px;
-      background: #666; border-radius: 2px;
-      box-shadow: 0 18px 0 #666, 0 36px 0 #666;
-    }
-    /* Seahawks logo hint on can */
-    .trash-body::after {
-      content: '🦅';
-      position: absolute;
-      bottom: 10px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.4rem; opacity: .4;
-    }
-
-    /* ═══════════════════════════ */
-    /* TITLE                       */
-    /* ═══════════════════════════ */
-    .site-title {
-      font-family: 'Lilita One', cursive;
-      font-size: clamp(2rem, 7vw, 4rem);
-      line-height: 1.05;
-      letter-spacing: .02em;
-      margin-top: 20px;
-    }
-
-    .line1 {
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(2px 2px 0 rgba(0,0,0,.8));
-    }
-    .line2 {
-      background: linear-gradient(135deg, var(--teal), #a8ff60);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(2px 2px 0 rgba(0,0,0,.8));
-    }
-    .line3 {
-      background: linear-gradient(135deg, var(--pink), var(--purple), var(--teal));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(2px 2px 0 rgba(0,0,0,.8));
-    }
-
-    .site-sub {
-      font-family: 'Righteous', cursive;
-      font-size: clamp(.8rem, 2.5vw, 1rem);
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      margin-top: 10px;
-      background: linear-gradient(90deg, var(--teal), var(--purple), var(--pink));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .dedication {
-      font-size: .82rem; color: var(--gray);
-      font-style: italic; margin: 8px 0 28px;
-    }
-
-    /* ═══════════════════ */
-    /* MAIN               */
-    /* ═══════════════════ */
-    main {
-      position: relative; z-index: 1;
-      max-width: 780px; margin: 0 auto;
-      padding: 32px 20px 100px;
-    }
-
-    /* SOUND */
-    .top-row {
-      display: flex; justify-content: flex-end; margin-bottom: 16px;
-    }
-
-    .sound-toggle {
-      font-family: 'Fredoka One', cursive;
-      font-size: .78rem; letter-spacing: .1em;
-      padding: 8px 18px;
-      background: rgba(255,255,255,.05);
-      border: 2px solid rgba(255,255,255,.12);
-      color: var(--gray);
-      cursor: pointer; border-radius: 20px;
-      transition: all .25s;
-      display: flex; align-items: center; gap: 7px;
-    }
-    .sound-toggle:hover { border-color: var(--pink); color: var(--pink); }
-    .sound-toggle.on    {
-      border-color: var(--teal); color: var(--teal);
-      background: rgba(105,190,40,.1);
-      box-shadow: 0 0 12px rgba(105,190,40,.25);
-    }
-
-    /* MODES */
-    .mode-row {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 8px; margin-bottom: 24px;
-    }
-    @media (max-width: 480px) { .mode-row { grid-template-columns: repeat(2,1fr); } }
-
-    .mode-btn {
-      font-family: 'Fredoka One', cursive;
-      font-size: .88rem; letter-spacing: .04em;
-      padding: 12px 6px;
-      border: 3px solid; cursor: pointer;
-      transition: all .2s; background: transparent;
-      border-radius: 10px; text-align: center; line-height: 1.3;
-    }
-    .mode-btn .bi { font-size: 1.4rem; display: block; margin-bottom: 3px; }
-
-    .mode-btn.heist  { border-color: var(--teal);   color: var(--teal); }
-    .mode-btn.advice { border-color: var(--purple);  color: var(--purple); }
-    .mode-btn.news   { border-color: var(--pink);    color: var(--pink); }
-    .mode-btn.random { border-color: #fff; color: #fff; }
-
-    .mode-btn.heist.active  { background: var(--teal);   color: #000; box-shadow: 0 4px 0 #2a5a00, 0 0 20px rgba(105,190,40,.4); }
-    .mode-btn.advice.active { background: var(--purple);  color: #fff; box-shadow: 0 4px 0 #5500aa, 0 0 20px rgba(204,68,255,.4); }
-    .mode-btn.news.active   { background: var(--pink);    color: #fff; box-shadow: 0 4px 0 #991155, 0 0 20px rgba(255,105,180,.4); }
-    .mode-btn.random.active { background: linear-gradient(135deg,var(--teal),var(--purple),var(--pink)); color: #fff; box-shadow: 0 4px 0 #111, 0 0 24px rgba(204,68,255,.4); }
-
-    .mode-btn:hover:not(.active) { transform: translateY(-3px); filter: brightness(1.2); }
-    .mode-btn.active { transform: translateY(2px); }
-
-    /* GENERATE BTN */
-    .gen-wrap { text-align: center; margin-bottom: 28px; }
-
-    .gen-btn {
-      font-family: 'Lilita One', cursive;
-      font-size: clamp(1.2rem, 4vw, 1.8rem);
-      letter-spacing: .06em;
-      padding: 20px 56px;
-      border: none; border-radius: 14px;
-      cursor: pointer; position: relative; overflow: hidden;
-      background: linear-gradient(135deg, var(--teal), var(--purple), var(--pink));
-      background-size: 200%;
-      animation: btn-gradient 4s ease infinite;
-      color: #fff;
-      text-shadow: 1px 1px 0 rgba(0,0,0,.3);
-      box-shadow: 0 6px 0 #001133, 0 8px 28px rgba(105,190,40,.3);
-      transition: transform .15s, box-shadow .15s;
-    }
-    @keyframes btn-gradient {
-      0%,100% { background-position: 0%; }
-      50%      { background-position: 100%; }
-    }
-    .gen-btn::before {
-      content: '';
-      position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
-      transform: skewX(-20deg);
-      animation: shine 3s ease infinite;
-    }
-    @keyframes shine { 0%{left:-100%} 40%{left:150%} 100%{left:150%} }
-
-    .gen-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 0 #001133, 0 14px 36px rgba(204,68,255,.4); }
-    .gen-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #001133; }
-
-    .btn-coon { display:inline-block; animation: wiggle 1.5s ease-in-out infinite; }
-    @keyframes wiggle { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(8deg)} }
-
-    /* OUTPUT CARD */
-    .output-card {
-      background: var(--card);
-      border: 4px solid var(--teal);
-      border-radius: 16px;
-      padding: 32px 24px;
-      position: relative;
-      min-height: 220px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      box-shadow: 6px 6px 0 #000, 0 0 50px rgba(105,190,40,.08);
-      overflow: hidden;
-      transition: border-color .3s, box-shadow .3s;
-    }
-
-    .output-card.heist-card  { border-color: var(--teal);   box-shadow: 6px 6px 0 #000, 0 0 40px rgba(105,190,40,.15); }
-    .output-card.advice-card { border-color: var(--purple);  box-shadow: 6px 6px 0 #000, 0 0 40px rgba(204,68,255,.15); }
-    .output-card.news-card   { border-color: var(--pink);    box-shadow: 6px 6px 0 #000, 0 0 40px rgba(255,105,180,.15); }
-
-    .output-card::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 16px 16px;
-      pointer-events: none;
-    }
-
-    .output-card::after {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 5px;
-      background: linear-gradient(90deg, var(--teal), var(--purple), var(--pink), var(--teal));
-      background-size: 200%;
-      animation: stripe-flow 3s linear infinite;
-      border-radius: 12px 12px 0 0;
-    }
-
-    .output-badge {
-      font-family: 'Fredoka One', cursive;
-      font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
-      padding: 5px 18px; border-radius: 20px;
-      margin-bottom: 16px; color: #fff;
-    }
-    .heist-card  .output-badge { background: var(--teal);   color: #000; }
-    .advice-card .output-badge { background: var(--purple); }
-    .news-card   .output-badge { background: var(--pink); }
-
-    .output-coon {
-      font-size: 3.8rem; margin-bottom: 12px;
-      display: block;
-      animation: pop-in .4s cubic-bezier(.36,.07,.19,.97);
-    }
-    @keyframes pop-in {
-      0%   { transform: scale(0) rotate(-25deg); opacity: 0; }
-      70%  { transform: scale(1.25) rotate(5deg); }
-      100% { transform: scale(1) rotate(0); opacity: 1; }
-    }
-
-    .output-title {
-      font-family: 'Lilita One', cursive;
-      font-size: clamp(1.05rem, 3.5vw, 1.6rem);
-      margin-bottom: 14px; line-height: 1.25;
-    }
-    .heist-card  .output-title { color: var(--teal); text-shadow: 1px 1px 0 rgba(0,0,0,.5); }
-    .advice-card .output-title { color: var(--purple); text-shadow: 1px 1px 0 rgba(0,0,0,.5); }
-    .news-card   .output-title { color: var(--pink); text-shadow: 1px 1px 0 rgba(0,0,0,.5); }
-
-    .output-body {
-      font-family: 'Nunito', sans-serif;
-      font-size: clamp(.88rem, 2vw, 1rem);
-      color: var(--white); line-height: 1.85;
-      max-width: 580px; font-weight: 600;
-    }
-    .output-body strong { color: var(--white); }
-    .heist-card  .output-body strong { color: var(--teal); }
-    .advice-card .output-body strong { color: var(--purple); }
-    .news-card   .output-body strong { color: var(--pink); }
-
-    .output-placeholder {
-      font-family: 'Righteous', cursive;
-      font-size: 1rem; color: rgba(255,249,240,.2); line-height: 2;
-    }
-
-    /* CHAOS METER */
-    .chaos-meter { margin-top: 22px; width: 100%; }
-    .chaos-header {
-      display: flex; justify-content: space-between;
-      font-family: 'Fredoka One', cursive;
-      font-size: .7rem; letter-spacing: .12em;
-      color: rgba(255,255,255,.25); margin-bottom: 6px; text-transform: uppercase;
-    }
-    .chaos-track {
-      height: 10px; background: rgba(255,255,255,.06);
-      border-radius: 6px; overflow: hidden;
-    }
-    .chaos-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--teal), var(--purple), var(--pink));
-      background-size: 200%;
-      animation: stripe-flow 3s linear infinite;
-      border-radius: 6px;
-      transition: width .8s cubic-bezier(.36,.07,.19,.97);
-      width: 0%;
-    }
-
-    /* CARD ACTIONS */
-    .card-actions {
-      display: flex; gap: 10px;
-      justify-content: center; margin-top: 20px; flex-wrap: wrap;
-    }
-    .act-btn {
-      font-family: 'Fredoka One', cursive;
-      font-size: .85rem; letter-spacing: .06em;
-      padding: 9px 22px;
-      border: 2px solid rgba(255,255,255,.12);
-      color: rgba(255,255,255,.35);
-      background: transparent; cursor: pointer;
-      border-radius: 8px; transition: all .2s;
-    }
-    .act-btn:hover { border-color: var(--pink); color: var(--pink); background: rgba(255,105,180,.08); }
-
-    /* COUNTER */
-    .counter {
-      text-align: center; margin-top: 28px;
-      font-family: 'Fredoka One', cursive;
-      font-size: .8rem; letter-spacing: .15em;
-      color: rgba(255,255,255,.18); text-transform: uppercase;
-    }
-    .counter em { color: var(--teal); font-style: normal; font-size: 1.1em; }
-
-    /* BOTTOM TAPE */
-    .bottom-tape {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; height: 20px;
-      background: linear-gradient(90deg, var(--navy), var(--teal), var(--purple), var(--pink), var(--teal), var(--navy));
-      background-size: 300%;
-      animation: stripe-flow 6s linear infinite;
-    }
-
-    /* BURST */
-    .burst {
-      position: fixed; pointer-events: none; z-index: 999;
-      font-size: 1.8rem;
-      animation: burst-up .7s ease forwards;
-    }
-    @keyframes burst-up { to { transform: translateY(-90px) scale(.4); opacity: 0; } }
-
-    /* SHAKE */
-    @keyframes shake {
-      0%,100%{transform:none}
-      15%{transform:translate(-6px,-2px) rotate(-3deg)}
-      30%{transform:translate(6px,2px)   rotate(3deg)}
-      45%{transform:translate(-4px,-1px) rotate(-2deg)}
-      60%{transform:translate(4px,1px)   rotate(2deg)}
-      75%{transform:translate(-2px,0)    rotate(-1deg)}
-    }
-    .shaking { animation: shake .45s ease; }
-
-    @media (max-width: 500px) {
-      .output-card { padding: 20px 14px; }
-      .gen-btn { padding: 16px 32px; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- BG COONS -->
-  <div class="bg-coon" style="left:8%;animation-duration:15s;animation-delay:0s">🦝</div>
-  <div class="bg-coon" style="left:28%;animation-duration:21s;animation-delay:6s">🦝</div>
-  <div class="bg-coon" style="left:52%;animation-duration:17s;animation-delay:10s">🦝</div>
-  <div class="bg-coon" style="left:74%;animation-duration:19s;animation-delay:3s">🦝</div>
-  <div class="bg-coon" style="left:92%;animation-duration:13s;animation-delay:8s">🦝</div>
+  <!-- EFFECTS OVERLAYS -->
+  <div id="lightningOverlay"></div>
+  <div class="milestone-banner" id="milestoneBanner">
+    <span class="mb-emoji" id="mbEmoji">🦝</span>
+    <div class="mb-title" id="mbTitle">MILESTONE!</div>
+    <div class="mb-sub"   id="mbSub">Chaos escalates.</div>
+  </div>
 
+  <!-- FLOATING BG RACCOONS -->
+  <div class="bg-coon" style="left:4%;animation-duration:15s;animation-delay:0s">🦝</div>
+  <div class="bg-coon" style="left:14%;animation-duration:21s;animation-delay:5s">🗑️</div>
+  <div class="bg-coon" style="left:26%;animation-duration:18s;animation-delay:9s">🦝</div>
+  <div class="bg-coon" style="left:38%;animation-duration:24s;animation-delay:2s">💜</div>
+  <div class="bg-coon" style="left:50%;animation-duration:16s;animation-delay:12s">🦝</div>
+  <div class="bg-coon" style="left:62%;animation-duration:20s;animation-delay:7s">🦅</div>
+  <div class="bg-coon" style="left:74%;animation-duration:13s;animation-delay:4s">🦝</div>
+  <div class="bg-coon" style="left:84%;animation-duration:23s;animation-delay:11s">🗑️</div>
+  <div class="bg-coon" style="left:93%;animation-duration:17s;animation-delay:1s">🦝</div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- HEADER                           -->
+  <!-- ════════════════════════════════ -->
   <header>
     <div class="tape"></div>
     <div class="header-inner">
       <div class="hawks-stripe"></div>
 
-      <!-- RACCOON HERO -->
+      <!-- VIDEO HERO (replaces SVG raccoon) -->
       <div class="hero-wrap">
-        <svg class="coon-svg" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="lidGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#5a5a6a"/>
-              <stop offset="100%" stop-color="#2e2e3e"/>
-            </linearGradient>
-            <linearGradient id="overallGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#002244"/>
-              <stop offset="100%" stop-color="#001530"/>
-            </linearGradient>
-            <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#69BE28"/>
-              <stop offset="100%" stop-color="#4a8a1a"/>
-            </linearGradient>
-            <linearGradient id="bowGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#69BE28"/>
-              <stop offset="100%" stop-color="#002244"/>
-            </linearGradient>
-          </defs>
-
-          <!-- ══ OVERALLS BIB (behind body) ══ -->
-          <rect x="42" y="118" width="76" height="72" rx="8"
-                fill="url(#overallGrad)" stroke="#001133" stroke-width="2"/>
-
-          <!-- ══ GREEN SHIRT UNDERNEATH ══ -->
-          <rect x="48" y="116" width="64" height="20" rx="4"
-                fill="url(#shirtGrad)"/>
-
-          <!-- ══ EARS ══ -->
-          <ellipse cx="44" cy="58" rx="17" ry="19" fill="#777"/>
-          <ellipse cx="44" cy="58" rx="10" ry="12" fill="#c07070"/>
-          <ellipse cx="116" cy="58" rx="17" ry="19" fill="#777"/>
-          <ellipse cx="116" cy="58" rx="10" ry="12" fill="#c07070"/>
-
-          <!-- ══ HEAD ══ -->
-          <ellipse cx="80" cy="90" rx="44" ry="42" fill="#888"/>
-
-          <!-- ══ MASK ══ -->
-          <ellipse cx="60" cy="88" rx="16" ry="14" fill="#333"/>
-          <ellipse cx="100" cy="88" rx="16" ry="14" fill="#333"/>
-
-          <!-- ══ EYES ══ -->
-          <circle cx="60" cy="87" r="9" fill="white"/>
-          <circle cx="100" cy="87" r="9" fill="white"/>
-          <circle cx="62" cy="87" r="5" fill="#111"/>
-          <circle cx="102" cy="87" r="5" fill="#111"/>
-          <circle cx="64" cy="84" r="2" fill="white"/>
-          <circle cx="104" cy="84" r="2" fill="white"/>
-
-          <!-- ══ NOSE ══ -->
-          <ellipse cx="80" cy="100" rx="13" ry="9" fill="#aaa"/>
-          <ellipse cx="80" cy="102" rx="6" ry="4" fill="#444"/>
-          <ellipse cx="80" cy="101" rx="3" ry="2" fill="#222"/>
-
-          <!-- ══ BLUSH ══ -->
-          <ellipse cx="40" cy="97" rx="11" ry="7" fill="#ff69b4" opacity=".5"/>
-          <ellipse cx="120" cy="97" rx="11" ry="7" fill="#ff69b4" opacity=".5"/>
-
-          <!-- ══ MOUTH ══ -->
-          <path d="M70 109 Q80 118 90 109" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-
-          <!-- ══ OVERALLS STRAPS ══ -->
-          <rect x="58" y="118" width="14" height="38" rx="5"
-                fill="url(#overallGrad)" stroke="#001133" stroke-width="1.5"/>
-          <rect x="88" y="118" width="14" height="38" rx="5"
-                fill="url(#overallGrad)" stroke="#001133" stroke-width="1.5"/>
-
-          <!-- ══ OVERALLS POCKET with Seahawk logo ══ -->
-          <rect x="64" y="142" width="32" height="26" rx="4"
-                fill="#001a33" stroke="#69BE28" stroke-width="2"/>
-          <text x="80" y="161" text-anchor="middle" font-size="14">🦅</text>
-
-          <!-- ══ OVERALL BUCKLES ══ -->
-          <rect x="60" y="118" width="10" height="6" rx="2"
-                fill="#69BE28" stroke="#2a5a00" stroke-width="1"/>
-          <rect x="90" y="118" width="10" height="6" rx="2"
-                fill="#69BE28" stroke="#2a5a00" stroke-width="1"/>
-
-          <!-- ══ ARMS (sleeves = green shirt) ══ -->
-          <path d="M42 122 Q22 140 28 155" stroke="url(#shirtGrad)" stroke-width="16" stroke-linecap="round" fill="none"/>
-          <path d="M118 122 Q138 140 132 155" stroke="url(#shirtGrad)" stroke-width="16" stroke-linecap="round" fill="none"/>
-
-          <!-- ══ PAWS ══ -->
-          <ellipse cx="28" cy="157" rx="12" ry="8" fill="#777"/>
-          <circle cx="22" cy="153" r="3.5" fill="#666"/>
-          <circle cx="29" cy="151" r="3.5" fill="#666"/>
-          <circle cx="36" cy="153" r="3.5" fill="#666"/>
-          <ellipse cx="132" cy="157" rx="12" ry="8" fill="#777"/>
-          <circle cx="126" cy="153" r="3.5" fill="#666"/>
-          <circle cx="133" cy="151" r="3.5" fill="#666"/>
-          <circle cx="140" cy="153" r="3.5" fill="#666"/>
-
-          <!-- ══ LEGS / OVERALL BOTTOM ══ -->
-          <rect x="48" y="176" width="26" height="20" rx="6"
-                fill="url(#overallGrad)" stroke="#001133" stroke-width="1.5"/>
-          <rect x="86" y="176" width="26" height="20" rx="6"
-                fill="url(#overallGrad)" stroke="#001133" stroke-width="1.5"/>
-
-          <!-- ══ TILTED LID HAT (on raccoon head) ══ -->
-          <g transform="rotate(-14 80 52)">
-            <!-- Shadow -->
-            <ellipse cx="80" cy="60" rx="44" ry="10" fill="rgba(0,0,0,.25)"/>
-            <!-- Lid body -->
-            <rect x="38" y="46" width="84" height="18" rx="5"
-                  fill="url(#lidGrad)" stroke="#111" stroke-width="2.5"/>
-            <!-- Handle -->
-            <rect x="68" y="38" width="24" height="10" rx="4"
-                  fill="#3a3a48" stroke="#111" stroke-width="2"/>
-            <!-- Shine -->
-            <rect x="44" y="50" width="32" height="4" rx="2"
-                  fill="rgba(255,255,255,.18)"/>
-            <!-- Seahawks stripe on lid -->
-            <rect x="38" y="58" width="84" height="4" rx="0"
-                  fill="#69BE28" opacity=".6"/>
-          </g>
-
-          <!-- ══ HELLO KITTY BOW ON HEAD ══ -->
-          <!-- Positioned on top of head, centered -->
-          <g transform="translate(80, 50) rotate(-8)">
-            <!-- Left lobe -->
-            <ellipse cx="-14" cy="-4" rx="13" ry="10"
-                     fill="url(#bowGrad)" stroke="#001133" stroke-width="1.5"/>
-            <!-- Right lobe -->
-            <ellipse cx="14" cy="-4" rx="13" ry="10"
-                     fill="url(#bowGrad)" stroke="#001133" stroke-width="1.5"/>
-            <!-- Center knot -->
-            <ellipse cx="0" cy="-4" rx="7" ry="6"
-                     fill="#69BE28" stroke="#2a5a00" stroke-width="1.5"/>
-            <!-- Shine on left -->
-            <ellipse cx="-17" cy="-8" rx="4" ry="3"
-                     fill="rgba(255,255,255,.3)"/>
-            <!-- Shine on right -->
-            <ellipse cx="11" cy="-8" rx="4" ry="3"
-                     fill="rgba(255,255,255,.3)"/>
-            <!-- Stars on bow lobes -->
-            <text x="-14" y="-1" text-anchor="middle" font-size="8" opacity=".6">★</text>
-            <text x="14" y="-1" text-anchor="middle" font-size="8" opacity=".6">★</text>
-          </g>
-
-        </svg>
-
-        <!-- CSS TRASH CAN -->
-        <div class="trash-wrap">
-          <div class="trash-body"></div>
-        </div>
+        <video class="hero-video" autoplay muted loop playsinline>
+          <source src="assets/videos/raccoon-video.mp4" type="video/mp4" />
+        </video>
       </div>
 
-      <div class="site-title">
+      <div class="site-title" id="siteTitle">
         <div class="line1">JOANNE'S</div>
         <div class="line2">RACCOON</div>
         <div class="line3">CHAOS GENERATOR</div>
       </div>
-      <div class="site-sub">⚡ Powered by Trash Energy & Pure Chaos ⚡</div>
+      <div class="site-sub">⚡ Powered by Trash Energy &amp; Pure Chaos ⚡</div>
       <div class="dedication">💜 Made with love by The Alchemist 💚</div>
     </div>
     <div class="tape" style="margin-top:20px"></div>
   </header>
 
+  <!-- ════════════════════════════════ -->
+  <!-- RACCOON PHOTO GALLERY            -->
+  <!-- ════════════════════════════════ -->
+  <section class="gallery-section">
+    <div class="gallery-slides">
+      <div class="gallery-slide active"
+           style="background-image:url('assets/images/raccoon-1.png')"></div>
+      <div class="gallery-slide"
+           style="background-image:url('assets/images/raccoon-2.png')"></div>
+      <div class="gallery-slide"
+           style="background-image:url('assets/images/raccoon-3.png')"></div>
+      <div class="gallery-slide"
+           style="background-image:url('assets/images/raccoon-4.png')"></div>
+      <div class="gallery-slide"
+           style="background-image:url('assets/images/raccoon-5.png')"></div>
+    </div>
+    <div class="gallery-overlay"></div>
+    <div class="gallery-caption" id="galleryCaption">The autumn crew has assembled.</div>
+    <div class="gallery-dots">
+      <span class="gdot active"></span>
+      <span class="gdot"></span>
+      <span class="gdot"></span>
+      <span class="gdot"></span>
+      <span class="gdot"></span>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════ -->
+  <!-- MAIN                             -->
+  <!-- ════════════════════════════════ -->
   <main>
 
     <div class="top-row">
@@ -657,10 +94,18 @@
     </div>
 
     <div class="mode-row">
-      <button class="mode-btn heist"  onclick="setMode('heist')"  id="btn-heist"><span class="bi">🕵️</span>HEIST MODE</button>
-      <button class="mode-btn advice" onclick="setMode('advice')" id="btn-advice"><span class="bi">🧠</span>WISDOM MODE</button>
-      <button class="mode-btn news"   onclick="setMode('news')"   id="btn-news"><span class="bi">📰</span>NEWS MODE</button>
-      <button class="mode-btn random active" onclick="setMode('random')" id="btn-random"><span class="bi">🎲</span>CHAOS MODE</button>
+      <button class="mode-btn heist"  onclick="setMode('heist')"  id="btn-heist">
+        <span class="bi">🕵️</span>HEIST MODE
+      </button>
+      <button class="mode-btn advice" onclick="setMode('advice')" id="btn-advice">
+        <span class="bi">🧠</span>WISDOM MODE
+      </button>
+      <button class="mode-btn news"   onclick="setMode('news')"   id="btn-news">
+        <span class="bi">📰</span>NEWS MODE
+      </button>
+      <button class="mode-btn random active" onclick="setMode('random')" id="btn-random">
+        <span class="bi">🎲</span>CHAOS MODE
+      </button>
     </div>
 
     <div class="gen-wrap">
@@ -688,227 +133,6 @@
 
   <div class="bottom-tape"></div>
 
-<script>
-  // ══════════════════════════════════
-  // STATE
-  // ══════════════════════════════════
-  let currentMode = 'random';
-  let soundOn = false;
-  let audioCtx = null;
-  let count = 0;
-  try { count = parseInt(localStorage.getItem('joanneV3') || '0'); } catch(e){}
-  document.getElementById('counter').textContent = count;
-
-  // ══════════════════════════════════
-  // RACCOON CHITTER — THE ONLY SOUND
-  // ══════════════════════════════════
-  function getCtx() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    return audioCtx;
-  }
-
-  function playChitter(intensity) {
-    // intensity: 1 = soft toggle click, 2 = full chaos unleash
-    const ctx = getCtx();
-    const t = ctx.currentTime;
-    const bursts = intensity === 2 ? 12 : 6;
-    const vol    = intensity === 2 ? 0.22 : 0.14;
-
-    for (let i = 0; i < bursts; i++) {
-      const osc    = ctx.createOscillator();
-      const gain   = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
-
-      filter.type = 'bandpass';
-      filter.frequency.value = 700 + Math.random() * 800;
-      filter.Q.value = 6 + Math.random() * 6;
-
-      osc.type = 'sawtooth';
-      const baseFreq = 280 + Math.random() * 360;
-      osc.frequency.setValueAtTime(baseFreq, t + i * 0.06);
-      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.65, t + i * 0.06 + 0.055);
-
-      // tiny pitch warble for realism
-      const lfo = ctx.createOscillator();
-      const lfoGain = ctx.createGain();
-      lfo.frequency.value = 18 + Math.random() * 12;
-      lfoGain.gain.value = 25;
-      lfo.connect(lfoGain);
-      lfoGain.connect(osc.frequency);
-
-      gain.gain.setValueAtTime(0, t + i * 0.06);
-      gain.gain.linearRampToValueAtTime(vol, t + i * 0.06 + 0.008);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.058);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(t + i * 0.06);
-      lfo.start(t + i * 0.06);
-      osc.stop(t + i * 0.06 + 0.065);
-      lfo.stop(t + i * 0.06 + 0.065);
-    }
-
-    // Extra little tail squeak at end for the unleash
-    if (intensity === 2) {
-      const sq = ctx.createOscillator();
-      const sg = ctx.createGain();
-      sq.type = 'sine';
-      sq.frequency.setValueAtTime(1800, t + bursts * 0.06);
-      sq.frequency.exponentialRampToValueAtTime(600, t + bursts * 0.06 + 0.12);
-      sg.gain.setValueAtTime(0.12, t + bursts * 0.06);
-      sg.gain.exponentialRampToValueAtTime(0.001, t + bursts * 0.06 + 0.12);
-      sq.connect(sg); sg.connect(ctx.destination);
-      sq.start(t + bursts * 0.06);
-      sq.stop(t + bursts * 0.06 + 0.13);
-    }
-  }
-
-  // ══════════════════════════════════
-  // SOUND TOGGLE
-  // ══════════════════════════════════
-  function toggleSound() {
-    soundOn = !soundOn;
-    document.getElementById('soundIcon').textContent  = soundOn ? '🔊' : '🔇';
-    document.getElementById('soundLabel').textContent = soundOn ? 'SOUNDS ON'  : 'SOUNDS OFF';
-    document.getElementById('soundToggle').classList.toggle('on', soundOn);
-    if (soundOn) {
-      try { playChitter(1); } catch(e) {}
-    }
-  }
-
-  // ══════════════════════════════════
-  // MODE
-  // ══════════════════════════════════
-  function setMode(m) {
-    currentMode = m;
-    ['heist','advice','news','random'].forEach(id =>
-      document.getElementById(`btn-${id}`).classList.toggle('active', id === m)
-    );
-  }
-
-  // ══════════════════════════════════
-  // CONTENT
-  // ══════════════════════════════════
-  const heists = [
-    { emoji:'🕵️🦝', title:'Operation: Trash Can Tuesday',
-      body:`Three raccoons — <strong>Gerald</strong>, <strong>Linda</strong>, and <strong>Lil' Diablo</strong> — spent 6 weeks casing the Henderson neighborhood. Their target: the blue recycling bin with the loose lid on Maple Street. Gerald created a diversion by dramatically falling off a fence. Linda handled logistics. Lil' Diablo ate an entire pizza in under 90 seconds. <strong>They were never caught.</strong>` },
-    { emoji:'🏦🦝', title:'The Great Dumpster Heist of 2023',
-      body:`When Applebee's installed a "raccoon-proof" lid, the raccoon community took it as a personal attack. <strong>Mama Roxy</strong> assembled a crew of seven. They trained for two weeks. On a Tuesday at 3am, they breached the dumpster in <strong>under four minutes.</strong> The manager still doesn't know what happened. The raccoons celebrated with mozzarella sticks.` },
-    { emoji:'🎭🦝', title:'The BBQ Caper',
-      body:`Joanne, this one is personal. <strong>Chad the Raccoon</strong> saw your neighbor's BBQ and made a decision. He recruited his cousin <strong>Brenda</strong> and her three children (none of them listened but they came anyway). <strong>Four hot dogs were taken. Zero regrets were expressed.</strong> Chad still thinks about those hot dogs every single night.` },
-    { emoji:'🎪🦝', title:'Mission: Impossible — Bird Feeder Edition',
-      body:`The bird feeder was described by raccoon intelligence as "heavily fortified." <strong>They didn't care.</strong> Renegade Rick spent three nights developing a technique involving sheer upper body strength and a complete disregard for physics. He ate every seed. He looked directly at the security camera. <strong>He felt nothing.</strong>` },
-    { emoji:'🍕🦝', title:'The Pizza Box Conspiracy',
-      body:`Twelve raccoons. One pizza box. <strong>Zero coordination.</strong> They argued 45 minutes about who opens it. Two wandered off mid-meeting. Eventually <strong>Steve</strong> just opened it himself. Hawaiian pizza inside. Nobody wanted Hawaiian. <strong>They took it anyway.</strong>` },
-    { emoji:'🚗🦝', title:'The Parking Lot Incident',
-      body:`<strong>"The Professor"</strong> discovered a Wendy's dumpster was accessible from the top of a Toyota Camry. Dave, the Camry's owner, watched from inside the restaurant. Dave and The Professor made eye contact. <strong>Neither one looked away for a very long time.</strong> Dave did not confront The Professor. The Professor did not apologize.` },
-  ];
-
-  const wisdoms = [
-    { emoji:'🧠🦝', title:'"The trash will always provide."',
-      body:`When life feels overwhelming, Joanne, remember: <strong>the trash will always provide.</strong> Did someone say something rude to you? There is a half-eaten sandwich within walking distance right now. <strong>The raccoon does not stress. The raccoon finds the sandwich.</strong> Be the raccoon, Joanne.` },
-    { emoji:'🌙🦝', title:'"The night belongs to those who show up."',
-      body:`Every raccoon philosopher agrees: <strong>show up at 3am, get the goods.</strong> The bin is full. The competition is asleep. This is a metaphor, Joanne. It is also literally what raccoons do. <strong>Both things are true. Both things are wisdom.</strong>` },
-    { emoji:'✋🦝', title:'"Wash everything. Trust nothing."',
-      body:`Before you consume anything — information, food, drama, opinions — <strong>wash it first.</strong> Examine it. Hold it up to the light. Then, and only then, eat it. Unless it's from a dumpster. Then just eat it. <strong>Life is short.</strong>` },
-    { emoji:'👀🦝', title:'"The mask means nothing. The eyes see everything."',
-      body:`Like a raccoon, Joanne, you see things others miss. You read a room like a raccoon reads a trash can — <strong>completely, thoroughly, and with great personal interest.</strong> This is a gift. A rare and powerful gift.` },
-    { emoji:'🤝🦝', title:'"Work alone. But let your cousin come anyway."',
-      body:`The greatest raccoon philosophers were solitary. But they always had <strong>a cousin who showed up uninvited.</strong> And somehow the cousin always helped. <strong>You cannot plan for the cousin. You simply accept the cousin. The cousin is part of the process.</strong>` },
-    { emoji:'💅🦝', title:'"Do it boldly or do not do it at all."',
-      body:`A raccoon has never done anything quietly. They tip the trash can at 3am and <strong>feel absolutely no shame about it.</strong> The raccoon does not apologize for wanting things. <strong>The raccoon tips the can and walks away unbothered.</strong>` },
-  ];
-
-  const news = [
-    { emoji:'📰🦝', title:'BREAKING: Local Raccoon "Just Checking" On Your Trash',
-      body:`MESA, AZ — A raccoon identified as <strong>Gerald Bandito Williams</strong> was spotted at 2:47am conducting what sources describe as "just a quick look" at a residential trash can. Gerald stared at a reporter for eleven seconds before returning to the trash. <strong>"He didn't even take anything. He just checked. And left."</strong>` },
-    { emoji:'🏆🦝', title:'RACCOON WINS STARING CONTEST WITH HOMEOWNER FOR THIRD CONSECUTIVE YEAR',
-      body:`For the third year running, <strong>Duchess von Scraps</strong> has defeated homeowner Dave Kowalski in their 3am staring contest through the kitchen window. Dave tried a flashlight. Duchess was unimpressed. <strong>"She tilted her head. Like she pitied me."</strong> Dave has begun therapy. Duchess has not.` },
-    { emoji:'🔬🦝', title:'SCIENTISTS CONFIRM: Raccoons Have Been "Judging Us This Whole Time"',
-      body:`A new study confirms what many suspected: <strong>raccoons are absolutely judging us.</strong> "They know which houses put out good trash. They remember faces. They hold grudges." Lead consultant <strong>Professor Biscuit McTrash</strong> declined to comment but was seen taking notes near a recycling bin.` },
-    { emoji:'📡🦝', title:'RACCOON SPENDS 45 MINUTES ON PORCH, ACCOMPLISHES NOTHING, LEAVES',
-      body:`A raccoon visited a Mesa, AZ porch, ate one piece of cat food that was not hers, knocked over a plant, stared into the middle distance, and left. <strong>"She just needed a minute,"</strong> said one witness. <strong>"We all do sometimes."</strong> The plant is still on its side.` },
-    { emoji:'🗳️🦝', title:'LOCAL RACCOON RUNS FOR HOA PRESIDENT ON "MORE TRASH" PLATFORM',
-      body:`<strong>Councilwoman Griselda Dumpster-Hughes</strong> announced her HOA candidacy. Platform: more trash cans, looser lids, mandatory composting. Slogan: <strong>"You Already Lost. I'm Just Making It Official."</strong> She was unavailable for comment. She was going through someone's recycling.` },
-    { emoji:'💔🦝', title:'AREA RACCOON VERY NORMAL ABOUT THE NEW "RACCOON-PROOF" LID',
-      body:`Sources confirm <strong>Brendan Maurice Pawsworth III</strong> is being very normal about the raccoon-proof lid. "He just sits next to it. Every night." Brendan refuses to try the next block's trash can. <strong>"It's not about the food,"</strong> said one analyst. "It's about the principle."` },
-  ];
-
-  // ══════════════════════════════════
-  // GENERATE
-  // ══════════════════════════════════
-  function generate() {
-    const btn  = document.getElementById('genBtn');
-    const card = document.getElementById('outputCard');
-
-    btn.classList.remove('shaking');
-    void btn.offsetWidth;
-    btn.classList.add('shaking');
-
-    if (soundOn) { try { playChitter(2); } catch(e){} }
-
-    const actual = currentMode === 'random'
-      ? ['heist','advice','news'][Math.floor(Math.random()*3)]
-      : currentMode;
-
-    const pools  = { heist: heists, advice: wisdoms, news };
-    const labels = { heist:'🕵️ RACCOON HEIST REPORT', advice:'🧠 RACCOON WISDOM', news:'📰 BREAKING RACCOON NEWS' };
-    const cls    = { heist:'heist-card', advice:'advice-card', news:'news-card' };
-
-    const item  = pools[actual][Math.floor(Math.random()*pools[actual].length)];
-    const chaos = Math.floor(Math.random()*30)+70;
-
-    card.className = `output-card ${cls[actual]}`;
-    card.innerHTML = `
-      <div class="output-badge">${labels[actual]}</div>
-      <span class="output-coon">${item.emoji}</span>
-      <div class="output-title">${item.title}</div>
-      <div class="output-body">${item.body}</div>
-      <div class="chaos-meter">
-        <div class="chaos-header"><span>CHAOS LEVEL</span><span id="chaosVal">0%</span></div>
-        <div class="chaos-track"><div class="chaos-fill" id="chaosFill"></div></div>
-      </div>
-      <div class="card-actions">
-        <button class="act-btn" onclick="copyStory()">📋 COPY</button>
-        <button class="act-btn" onclick="generate()">🦝 ANOTHER ONE</button>
-      </div>`;
-
-    setTimeout(() => {
-      const f = document.getElementById('chaosFill');
-      const v = document.getElementById('chaosVal');
-      if (f) f.style.width = chaos + '%';
-      if (v) v.textContent = chaos + '%';
-    }, 80);
-
-    count++;
-    try { localStorage.setItem('joanneV3', count); } catch(e){}
-    document.getElementById('counter').textContent = count;
-    window._story = `${item.title}\n\n${item.body.replace(/<[^>]+>/g,'')}`;
-    card.scrollIntoView({ behavior:'smooth', block:'center' });
-  }
-
-  function copyStory() {
-    if (!window._story) return;
-    navigator.clipboard.writeText(window._story).then(() => {
-      const b = document.querySelectorAll('.act-btn')[0];
-      if (b) { b.textContent = '✓ COPIED!'; setTimeout(()=>b.textContent='📋 COPY',2000); }
-    }).catch(()=>{});
-  }
-
-  // CLICK BURST
-  document.addEventListener('click', e => {
-    const items = ['🦝','💜','💚','🦝','💗','🦝','⭐'];
-    const el = document.createElement('div');
-    el.className = 'burst';
-    el.textContent = items[Math.floor(Math.random()*items.length)];
-    el.style.left = (e.clientX-16)+'px';
-    el.style.top  = (e.clientY-16)+'px';
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(), 700);
-  });
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
