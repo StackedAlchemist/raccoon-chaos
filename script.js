@@ -217,6 +217,19 @@ const news = [
 ];
 
 // ══════════════════════════════════
+// HEADER SEATTLE BG SLIDESHOW
+// ══════════════════════════════════
+let headerBgIdx = 0;
+function nextHeaderBg() {
+  const slides = document.querySelectorAll('.header-bg-slide');
+  if (!slides.length) return;
+  slides[headerBgIdx].classList.remove('active');
+  headerBgIdx = (headerBgIdx + 1) % slides.length;
+  slides[headerBgIdx].classList.add('active');
+}
+setInterval(nextHeaderBg, 7000);
+
+// ══════════════════════════════════
 // GALLERY SLIDESHOW
 // ══════════════════════════════════
 const galleryCaptions = [
@@ -322,7 +335,7 @@ function triggerParade() {
   const el    = document.createElement('div');
   el.className = 'parade-coon';
   el.textContent = options[Math.floor(Math.random() * options.length)];
-  const dur = (4 + Math.random() * 3).toFixed(1);
+  const dur = (12 + Math.random() * 8).toFixed(1);
   el.style.cssText = `bottom:${lanes[Math.floor(Math.random() * lanes.length)]}px; --pd-dur:${dur}s;`;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), (parseFloat(dur) + 1) * 1000);
